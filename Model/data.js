@@ -1,32 +1,32 @@
-// const mongoose = require("mongoose")
-
-// const TodoSchema = new mongoose.Schema({
-    
-//     user:String
-    
-
-// })
-//  const TodoModel = mongoose.model("student",TodoSchema)
-//  module.exports = TodoModel
 
 
-const mongoose = require("mongoose");
+ const mongoose = require("mongoose");
+ const {Schema }=mongoose;
 
-const userSchema = new mongoose.Schema({
+
+const userSchema = new Schema({
   name: {
-    type: String, // Change to String (not Schema.Types.String)
+    type: Schema.Types.String,
     required: true,
   },
-  number: {
-    type: Number, // Change to Number (not Schema.Types.Number)
-    required: true,
-  },
+ 
   email: {
-    type: String,
+    type: Schema.Types.String,
     required: true,
     unique: true,
   },
-  
+  password: {
+    type: Schema.Types.String,
+    required: true,
+  },
+  category: {
+    type: Schema.Types.String,
+    required: false,
+  },
+  option: {
+    type: Schema.Types.String,
+    required: false,
+  }
 });
 
 const User = mongoose.model('student', userSchema);

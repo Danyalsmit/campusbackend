@@ -1,26 +1,25 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
-const User = require("./Model/data.js");
+const router = require("./Routes/index.js")
+const mongoose = require ("./db/index.js")
+
 
 const app = express();
+const port = process.env.PORT || 8000;
 app.use(cors());
+
+const db = mongoose.connection;
+db.on("error", console.error.bind(console,"connection error:") );
+db.once("open",function(){
+  console.log("db connected");
+})
+
+
 app.use(express.json());
+app.use("/api",router);
 
-mongoose.connect(`mongodb+srv://danyal:danyal@dk.6zdlkec.mongodb.net/SHOP?
-retryWrites=true&w=majority`);
 
-app.post("/users", (req, res) => {
-  const user = req.body.user;
-  console.log({user})
-  User.create({ user: user })
-    .then((result) => {
-      res.status(201).json(result);
-    }).catch((err) => {
-      res.status(500).json({ error: "Internal server error" });
-    });
-});
 
-app.listen(8000, () => {
-  console.log("server is Running");
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });

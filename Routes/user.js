@@ -1,35 +1,47 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../Model/data.js");
+const bcrypt = require("bcrypt");
 
-
-
-
-
-router.get("/login/:id", async (req, res) => {
+router.get("/admin", async (req, res) => {
   try {
-    const { id }=req.params;
+    const all = await User.find();
 
-    const all = await User.find({_id:id});
-    
     return res.status(200).send({
       status: "success",
-      user: all, 
+      users: all,
     });
   } catch (error) {
     return res.status(400).send({
       status: 400,
-      message: error.message, 
+      message: error.message,
     });
   }
 });
- 
 
+router.get("/login/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const all = await User.find({ _id: id });
+
+    return res.status(200).send({
+      status: "success",
+      user: all,
+    });
+  } catch (error) {
+    return res.status(400).send({
+      status: 400,
+      message: error.message,
+    });
+  }
+});
 
 router.post("/signup", async (req, res) => {
   try {
     console.log(req.body);
-    const user =  new User(req.body);
+    const password = await bcrypt.hash(req.body.password, 10);
+    const user = new User({ ...req.body, password });
     const newUser = await user.save();
     return res.status(200).send({
       status: "succes",
@@ -40,22 +52,24 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-
-
 router.post("/login", async (req, res) => {
   try {
-    let user = await User.findOne(req.body);
-    console.log("first", user);
-    if (user) {
-      return res.status(200).json(user);
-    } else {
-      res.status(400).send("result: no user found");
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email }).then((res) => res.toObject());
+    if (!user) {
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      if (!passwordMatch) {
+        return res
+          .status(400)
+          .send({ status: 403, message: "Invalid password" });
+      }
     }
+    delete user.password;
+    return res.status(200).json(user);
   } catch (error) {
-    console.error("Error:", error);
     res.status(500).send("Internal Server Error");
   }
 });
-
 
 module.exports = router;

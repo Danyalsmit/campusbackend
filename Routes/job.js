@@ -2,6 +2,28 @@ const express = require("express");
 const router = express.Router();
 const jobs = require("../Model/jobdata.js");
 
+
+router.get("/job/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const all = await jobs.find({ _id: id });
+
+    return res.status(200).send({
+      status: "success",
+      user: all,
+    });
+  } catch (error) {
+    return res.status(400).send({
+      status: 400,
+      message: error.message,
+    });
+  }
+});
+
+
+
+
 router.post("/job", async (req, res) => {
   try {
     console.log(req.body);

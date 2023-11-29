@@ -26,7 +26,7 @@ router.get("/apply/:id", async (req, res) => {
 
 router.post("/apply", async (req, res) => {
   try {
-    console.log(req.body,"ertyuiertyuioertyuidertyu");
+    console.log(req.body);
     const appl = new applied(req.body);
     const newUser = await appl.save();
     console.log(newUser,"dfghjk");

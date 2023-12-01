@@ -56,20 +56,25 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email }).then((res) => res.toObject());
+    const user = await User.findOne({ email });
+
     if (!user) {
-      const passwordMatch = await bcrypt.compare(password, user.password);
-      if (!passwordMatch) {
-        return res
-          .status(400)
-          .send({ status: 403, message: "Invalid password" });
-      }
+      return res.status(400).send({ status: 403, message: "Invalid email or password" });
     }
-    delete user.password;
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      return res.status(400).send({ status: 403, message: "Invalid password" });
+    }
+
+    // Password matches, so you can proceed with successful login
     return res.status(200).json(user);
   } catch (error) {
-    res.status(500).send("Internal Server Error");
+    console.error(error);
+    return res.status(500).send("Internal Server Error");
   }
 });
+
 
 module.exports = router;

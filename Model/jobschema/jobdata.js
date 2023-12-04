@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
+  userId: {
+    type: Schema.Types.ObjectId,
+    required: false,
+  },
   JobCategory	: {
     type: Schema.Types.String,
     required: true,

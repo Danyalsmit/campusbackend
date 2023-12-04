@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../Model/data.js");
+const User = require("../../Model/dataschema/data.js");
 const bcrypt = require("bcrypt");
 
 router.get("/admin", async (req, res) => {
@@ -59,7 +59,9 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(400).send({ status: 403, message: "Invalid email or password" });
+      return res
+        .status(400)
+        .send({ status: 403, message: "Invalid email or password" });
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
@@ -75,6 +77,5 @@ router.post("/login", async (req, res) => {
     return res.status(500).send("Internal Server Error");
   }
 });
-
 
 module.exports = router;

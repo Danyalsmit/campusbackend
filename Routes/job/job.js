@@ -1,13 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const jobs = require("../Model/jobdata.js");
-
+const jobs = require("../../Model/jobschema/jobdata.js");
 
 router.get("/job/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
-    const all = await jobs.find({ _id: id });
+    const all = await jobs.find({ userId: id });
 
     return res.status(200).send({
       status: "success",
@@ -20,9 +19,6 @@ router.get("/job/:id", async (req, res) => {
     });
   }
 });
-
-
-
 
 router.post("/job", async (req, res) => {
   try {
@@ -41,18 +37,17 @@ router.post("/job", async (req, res) => {
 router.get("/jobs", async (req, res) => {
   try {
     const allJobs = await jobs.find();
-    
+
     return res.status(200).send({
       status: "success",
-      jobs: allJobs, 
+      jobs: allJobs,
     });
   } catch (error) {
     return res.status(400).send({
       status: 400,
-      message: error.message, 
+      message: error.message,
     });
   }
 });
- 
 
 module.exports = router;

@@ -1,4 +1,4 @@
-const mongoose = require ("./index")
+const mongoose = require ("../mongo/index")
 
 
 const db = mongoose.connection;
